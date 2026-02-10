@@ -1,0 +1,41 @@
+Configuration:
+  status: WARN
+  monitorInterval: 30
+
+  Properties:
+    Property:
+      - name: "LOG_PATTERN"
+        value: "%d{DEFAULT} %-5p %c{1} - %m%n"
+
+  Appenders:
+    Console:
+      name: console
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: "${LOG_PATTERN}"
+
+    RollingFile:
+      name: hippodrome
+      fileName: "logs/hippodrome.log"
+      filePattern: "logs/hippodrome.%d{yyyy-MM-dd}.log"
+      ignoreExceptions: false
+      PatternLayout:
+        pattern: "${LOG_PATTERN}"
+      Policies:
+        TimeBasedTriggeringPolicy:
+          interval: 1
+          modulate: true
+      DefaultRolloverStrategy:
+        Delete:
+          basePath: "logs"
+          maxDepth: 1
+          IfFileName:
+            glob: "logs/hippodrome.*.log"
+          IfLastModified:
+            age: "7d"
+
+  Loggers:
+    Root:
+      level: all
+      AppenderRef:
+        - ref: hippodrome
